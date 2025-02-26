@@ -2296,3 +2296,8 @@ To github.com:Minwauu/Non-Examined-Assessment.git
    a6ff78e..5bdb967  main -> main
 To github.com:Minwauu/Non-Examined-Assessment.git
    5bdb967..af35ab3  main -> main
+ssh: Could not resolve hostname github.com: Temporary failure in name resolution
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
