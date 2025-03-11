@@ -70,9 +70,16 @@ def dashboard():
 @login_required
 
 def logout():
-    logout_user():
+    logout_user()
     flash('You have been logged out', 'info')
     return redirect(url_for('login'))
+
+
+if __name__ == '__main__':
+    db.create_all()
+    app.run(debug=True)
+
+    
 
 
 
