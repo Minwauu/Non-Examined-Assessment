@@ -57,6 +57,26 @@ def login():
             return redirect(url_for('dashboard'))
         else:
             flash('Incorrect email or password', 'danger')
+    
+    return render_template('login.html')
+
+@app.route('/dashboard')
+@login_required
+
+def dashboard():
+    return ("Welcome " + str(current_user.username) + ".")
+
+@app.route('/logout')
+@login_required
+
+def logout():
+    logout_user():
+    flash('You have been logged out', 'info')
+    return redirect(url_for('login'))
+
+
+
+
 
 
     
