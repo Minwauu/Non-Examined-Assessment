@@ -29,4 +29,21 @@ def registering():
         username = request.form.get('username')
         email = request.form.get('email')
         password = request.form.get('password')
-        hashed_password = bcrypt.generate_password_hash(password)
+        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+        existing_user = User.query.filter_by(email=email).first()
+        
+        if existing_user:
+            flash('Email already registered', 'danger')
+            return redirect(url_for('registering'))
+        
+        new_user = User(username=username, email = email, password = hashed_password)
+        db.session.add(new_user)
+        db.session.commit()
+        flash('Registeration complete - log in.', 'success')
+        return redirect(url_for('login'))
+    
+    return render_template('register.html')
+
+
+
+
