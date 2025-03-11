@@ -4,7 +4,7 @@ from flask_login import UserMixin, LoginManager, login_user, logout_user, login_
 from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
-app.config['SECRET KEY'] = 'minwauu'
+app.config['SECRET_KEY'] = 'minwauu'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///cinema_booking_system.db'
 
 db = SQLAlchemy(app)
@@ -76,7 +76,8 @@ def logout():
 
 
 if __name__ == '__main__':
-    db.create_all()
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)
 
 
