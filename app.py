@@ -6,3 +6,6 @@ from flask_bcrypt import Bcrypt
 app = Flask(__name__)
 app.config['SECRET KEY'] = 'minwauu'
 app.config['SQLALCHEMY_DATABSE'] = 'sqlite:///cinema_booking_system.db'
+
+db = SQLAlchemy(app)
+bcrypt = Bcrypt(app)
