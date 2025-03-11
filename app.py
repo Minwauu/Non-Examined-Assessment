@@ -18,3 +18,15 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(100), unique = True, nullable = False)
     email = db.Column(db.String(100), unique=True, nullable = False)
     password = db.Column(db.String(100), nullable = False)
+
+@login_manager.user_loading
+def user_loading(user_id):
+    return User.query.get(int(user_id))
+
+@app.route('/registering', methods = ['GET', 'POST'])
+def registering():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        hashed_password = bcrypt.generate_password_hash(password)
