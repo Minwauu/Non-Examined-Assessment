@@ -44,6 +44,23 @@ def registering():
     
     return render_template('register.html')
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        user = User.query.filter_by(email=email).first()
+
+        if user and bcrypt.check_password_hash(user.password, password):
+            login_user(user)
+            flash('Login complete', 'success')
+            return redirect(url_for('dashboard'))
+        else:
+            flash('Incorrect email or password', 'danger')
+
+
+    
+
 
 
 
