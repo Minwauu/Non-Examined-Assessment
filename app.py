@@ -42,7 +42,7 @@ def registering():
         flash('Registeration complete - log in.', 'success')
         return redirect(url_for('login'))
     
-    return render_template('register.html')
+    return render_template('registering.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
