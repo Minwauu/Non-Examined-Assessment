@@ -65,9 +65,7 @@ def login():
 
 def dashboard():
     return render_template('dashboard.html', username=current_user.username)
-    return "Welcome " + str(current_user.username) + "."
-
-
+  
 
 @app.route('/logout')
 @login_required
