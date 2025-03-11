@@ -5,7 +5,7 @@ from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
 app.config['SECRET KEY'] = 'minwauu'
-app.config['SQLALCHEMY_DATABSE'] = 'sqlite:///cinema_booking_system.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///cinema_booking_system.db'
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
@@ -19,8 +19,8 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(100), unique=True, nullable = False)
     password = db.Column(db.String(100), nullable = False)
 
-@login_manager.user_loading
-def user_loading(user_id):
+@login_manager.user_loader
+def user_loader(user_id):
     return User.query.get(int(user_id))
 
 @app.route('/registering', methods = ['GET', 'POST'])
@@ -79,7 +79,7 @@ if __name__ == '__main__':
     db.create_all()
     app.run(debug=True)
 
-    
+
 
 
 
