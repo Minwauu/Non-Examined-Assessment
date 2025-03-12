@@ -32,6 +32,11 @@ def registering():
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
         existing_user = User.query.filter_by(email=email).first()
         
+        existing_username = User.query.filter_by(username=username).first()
+        if existing_username:
+            flash('Username already taken.', 'danger')
+            return redirect(url_for('registering'))
+        
         if existing_user:
             flash('Email already registered', 'danger')
             return redirect(url_for('registering'))

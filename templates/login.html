@@ -2,9 +2,109 @@
 <html>
 <head>
     <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        h2 {
+            color: #333;
+        }
+        form {
+            display: inline-block;
+            text-align: left;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .flash-container {
+            width: 50%;
+            margin: auto;
+            text-align: center;
+        }
+        .flash-message {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+            position: relative;
+        }
+        .success {
+            color: green;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+        }
+        .danger {
+            color: red;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            color: blue;
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+        }
+        .close-btn {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            color: #333;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
     <h2>Login</h2>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-container">
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">
+                        {{ message }}
+                        <span class="close-btn" onclick="this.parentElement.style.display='none';">&times;</span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
     <form method="POST">
         <label>Email:</label>
         <input type="email" name="email" required><br>
@@ -14,6 +114,17 @@
         
         <button type="submit">Login</button>
     </form>
+
     <p>Don't have an account? <a href="{{ url_for('registering') }}">Register</a></p>
+
+    <!-- Auto-hide Flash Messages -->
+    <script>
+        setTimeout(() => {
+            let flashMessages = document.querySelectorAll('.flash-message');
+            flashMessages.forEach(msg => {
+                msg.style.display = 'none';
+            });
+        }, 3000);  // Clears messages after 3 seconds
+    </script>
 </body>
 </html>

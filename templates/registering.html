@@ -2,21 +2,103 @@
 <html>
 <head>
     <title>Register</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        h2 {
+            color: #333;
+        }
+        form {
+            display: inline-block;
+            text-align: left;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .flash-messages {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .success {
+            color: green;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+        }
+        .danger {
+            color: red;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            color: blue;
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
     <h2>Register</h2>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash-messages {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
     <form method="POST">
         <label>Username:</label>
-        <input type="text" name="username" required><br>
+        <input type="text" name="username" required>
         
         <label>Email:</label>
-        <input type="email" name="email" required><br>
+        <input type="email" name="email" required>
         
         <label>Password:</label>
-        <input type="password" name="password" required><br>
+        <input type="password" name="password" required>
         
         <button type="submit">Register</button>
     </form>
+
     <p>Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
 </body>
 </html>
