@@ -7,6 +7,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'minwauu'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///cinema_booking_system.db'
 
+# initialise and encrypt
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
@@ -23,6 +24,8 @@ class User(db.Model, UserMixin):
 def user_loader(user_id):
     return User.query.get(int(user_id))
 
+
+# registration page
 @app.route('/registering', methods = ['GET', 'POST'])
 def registering():
     if request.method == 'POST':
@@ -32,15 +35,17 @@ def registering():
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
         existing_user = User.query.filter_by(email=email).first()
         
+        #checks username
         existing_username = User.query.filter_by(username=username).first()
         if existing_username:
             flash('Username already taken.', 'danger')
             return redirect(url_for('registering'))
-        
+        #checks email
         if existing_user:
             flash('Email already registered', 'danger')
             return redirect(url_for('registering'))
         
+        #adds new user to database
         new_user = User(username=username, email = email, password = hashed_password)
         db.session.add(new_user)
         db.session.commit()
@@ -49,6 +54,7 @@ def registering():
     
     return render_template('registering.html')
 
+#login page
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -56,7 +62,7 @@ def login():
         password = request.form.get('password')
         user = User.query.filter_by(email=email).first()
 
-        if user and bcrypt.check_password_hash(user.password, password):
+        if user and bcrypt.check_password_hash(user.password, password): #checks if email and password is correct
             flash('Login complete!', 'success')
             login_user(user)
             return redirect(url_for('dashboard'))
@@ -65,22 +71,23 @@ def login():
     
     return render_template('login.html')
 
+#dashboard page
 @app.route('/dashboard')
-@login_required
+@login_required # need to be logged in to access dashboard
 
 def dashboard():
     return render_template('dashboard.html', username=current_user.username)
   
 
 @app.route('/logout')
-@login_required
+@login_required # need to be logged in to log out
 
 def logout():
     logout_user()
     flash('You have been logged out', 'info')
     return redirect(url_for('login'))
 
-
+#runs
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
