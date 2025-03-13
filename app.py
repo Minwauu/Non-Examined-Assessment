@@ -26,7 +26,7 @@ def user_loader(user_id):
     return User.query.get(int(user_id))
 
 
-# registration page
+'''# registration page
 @app.route('/registering', methods = ['GET', 'POST'])
 def registering():
     if request.method == 'POST':
@@ -86,7 +86,7 @@ def dashboard():
 def logout():
     logout_user()
     flash('You have been logged out', 'info')
-    return redirect(url_for('login'))
+    return redirect(url_for('login'))'''
 
 #runs
 if __name__ == '__main__':
