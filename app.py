@@ -2,24 +2,28 @@ from flask import Flask, redirect, url_for, render_template, request, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager, login_user, logout_user, login_required, current_user
 from flask_bcrypt import Bcrypt
+from extensions import db, bcrypt, login_manager
+
 
 #flask setup
-app = Flask(__name__)
+app = Flask(__name__, template_folder = 'templates')
 app.config['SECRET_KEY'] = 'minwauu'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///cinema_booking_system.db'
 
-# initialise and encrypt
-db = SQLAlchemy(app)
-bcrypt = Bcrypt(app)
 
-login_manager = LoginManager(app)
-login_manager.login_view = 'login'
+db.init_app(app)
+login_manager.init_app(app)
+bcrypt.init_app(app)
+
 
 @login_manager.user_loader
 def user_loader(user_id):
+    from models import User
     return User.query.get(int(user_id))
 
-from admin import *
+from admin import admin_bp
+app.register_blueprint(admin_bp)
+
 
 #runs
 if __name__ == '__main__':
