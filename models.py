@@ -21,7 +21,7 @@ class Movie(db.Model):
 
 # screenings 
 
-class Screening(db.model):
+class Screening(db.Modeld):
     id = db.Column(db.Integer, primary_key = True)
     screen_number = db.Column(db.Integer, nullable = False)
     movie_id = db.Column(db.Integer, db.ForeignLey('movie.id'), nullable=False) # maybe used in favourites
@@ -29,9 +29,16 @@ class Screening(db.model):
 
 # showings
 
-class Showtime(db.model):
+class Showtime(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     start_time = db.Column(db.DateTime, nullable=False)
     screening_id = db.Column(db.Integer, db.ForeignKey('screening.id'), nullable = False) #will be used in bookings
+
+class SeatBooking(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    seat_number = db.Column(db.String(100), nullable = False)
+    availability = db.Column(db.String(100), nullable = False)
+    screening_id = db.Column(db.Integer, db.ForeignKey('screening.id'), nullable = False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
 
 
