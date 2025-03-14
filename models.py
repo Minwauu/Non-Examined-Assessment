@@ -49,12 +49,29 @@ class SeatStatus(Enum):
 class SeatBooking(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     seat_number = db.Column(db.String(10), nullable = False)
-    status = db.Column(db.Boolean, default = True, nullable = False)
+    availability = db.Column(db.Enum(SeatStatus), default = SeatStatus.AVAILABLE, nullable = False)
     screening_id = db.Column(db.Integer, db.ForeignKey('screening.id'), nullable = False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
-    accessability = db.Column(db.Boolean, default = True, nullable=False)
-    screening = db.relationship("Screening", backref = "seatbooking")
-    user = db.relationship("User", backref = "bookings") 
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = True)
+    is_accessible = db.Column(db.Boolean, default = False, nullable=False)
+    screening = db.relationship("Screening", backref = "seatbookings")
+    user = db.relationship("User", backref = "seatbookings") 
+
+    def status(self):
+        if self.is_accessible:
+            if self.availability == SeatStatus.AVAILABLE:
+                return SeatStatus.ACCESSIBLE_AVAILABLE
+            elif self.availability == SeatStatus.RESERVED:
+                return SeatStatus.ACCESSIBLE_RESERVED
+            elif self.availability == SeatStatus.BOOKED:
+                return SeatStatus.ACCESSIBLE_BOOKED
+        
+        return self.availability
+
+    
+    def __str__(self):
+        accessibility_message = "Accessible" if self.is_accessible else "Regular"
+        return f"<SeatBooking id={self.id}, seat_number={self.seat_number}, availability={self.availability.value}, type={accessibility_message}>"
+    
 
 
 
