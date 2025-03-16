@@ -1,7 +1,8 @@
-from flask_sqlalchemy import SQLAlchemy, Enum
+from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 from extensions import db
 from datetime import datetime
+from enum import Enum
 
 # user model (admin + customers for now maybe add accessability users)
 class User(db.Model, UserMixin):
@@ -21,10 +22,10 @@ class Movie(db.Model):
 
 # screenings 
 
-class Screening(db.Modeld):
+class Screening(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     screen_number = db.Column(db.Integer, nullable = False)
-    movie_id = db.Column(db.Integer, db.ForeignLey('movie.id'), nullable=False) # maybe used in favourites
+    movie_id = db.Column(db.Integer, db.ForeignKey('movie.id'), nullable=False) # maybe used in favourites
     showtimes = db.relationship('Showtime', backref = 'screening', lazy = True)
 
 # showings

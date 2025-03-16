@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager, login_user, logout_user, login_required, current_user
 from flask_bcrypt import Bcrypt
 from extensions import db, bcrypt, login_manager
+from flask_migrate import Migrate 
 
 
 #flask setup
@@ -14,7 +15,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///cinema_booking_system.db'
 db.init_app(app)
 login_manager.init_app(app)
 bcrypt.init_app(app)
-
+migrate = Migrate(app,db)
 
 @login_manager.user_loader
 def user_loader(user_id):
@@ -24,6 +25,7 @@ def user_loader(user_id):
 from admin import admin_bp
 app.register_blueprint(admin_bp)
 
+from models import *
 
 #runs
 if __name__ == '__main__':
