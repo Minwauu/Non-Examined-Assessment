@@ -18,6 +18,7 @@ class Movie(db.Model):
     title = db.Column(db.String(100), unique = True, nullable =False)
     duration = db.Column(db.Integer, nullable = False)
     description = db.Column(db.Text, nullable=False)
+    genre = db.Column(db.String(100), nullable = False)
     screenings = db.relationship('Screening', backref = 'movie', lazy = True)
 
 # screenings 
