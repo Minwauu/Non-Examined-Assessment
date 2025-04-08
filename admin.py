@@ -1,7 +1,7 @@
 from extensions import db, bcrypt
 from flask import Flask, redirect, url_for, render_template, request, flash, Blueprint
 from flask_login import login_user, logout_user, login_required, current_user
-from models import User
+from models import db, User, Movie
 
 main_bp = Blueprint('main', __name__)
 
@@ -66,3 +66,33 @@ def logout():
     logout_user()
     flash('You have been logged out', 'info')
     return redirect(url_for('main.login'))
+
+@main_bp.route('/add_movie', methods = ['GET', 'POST'])
+def add_movie():
+    #details
+    if request.method =='POST':
+        title = request.form['title']
+        description = request.form['description']
+        duration = request.form['duration']
+        genre = request.form['genre']
+
+        #make new movie using movie model
+        new_movie = Movie(title=title, duration = duration, description = description, genre=genre)
+
+        try:
+            # add movie to db
+            db.session.add(new_movie)
+            db.session.commit()
+            flash('Success - Movie added.')
+        except:
+            #catching error
+            db.session.rollback()
+            flash('Error - Try again.')
+        
+        return redirect(url_for('main.add_movie'))
+    
+    return render_template('admin/addmovie.html') #defaults to form page
+
+
+
+
