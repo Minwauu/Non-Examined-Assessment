@@ -22,8 +22,8 @@ def user_loader(user_id):
     from models import User
     return User.query.get(int(user_id))
 
-from admin import admin_bp
-app.register_blueprint(admin_bp)
+from admin import main_bp
+app.register_blueprint(main_bp)
 
 from models import *
 
