@@ -1,7 +1,7 @@
 from extensions import db, bcrypt
 from flask import Flask, redirect, url_for, render_template, request, flash, Blueprint
 from flask_login import login_user, logout_user, login_required, current_user
-from models import db, User, Movie
+from models import db, User, Movie, Screening
 
 main_bp = Blueprint('main', __name__)
 
@@ -93,6 +93,20 @@ def add_movie():
     
     return render_template('admin/addmovie.html') #defaults to form page
 
+@main_bp.route('/admin_dashboard')
+@login_required
+
+def admin_dashboard():
+    try:
+        movies = Movie.query.all()
+        screenings = Screening.query.all()
+        #gets from db
+
+        return render_template('admin/admindashboard.html', movies=movies, screenings=screenings)
+    
+    except:
+        flash('Error.', 'danger')
+        return render_template('admin/admindashboard.html', movies=[], screenings=[])
 
 
 

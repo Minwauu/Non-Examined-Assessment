@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+            text-align: center;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        table {
+            width: 90%;
+            margin: 0 auto 40px;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .edit-btn {
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .edit-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h2>Admin Dashboard</h2>
+
+    <!-- Movies Table -->
+    <h3>All Movies</h3>
+    {% if movies %}
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Genre</th>
+            <th>Duration (mins)</th>
+        </tr>
+        {% for movie in movies %}
+        <tr>
+            <td>{{ movie.id }}</td>
+            <td>{{ movie.title }}</td>
+            <td>{{ movie.genre }}</td>
+            <td>{{ movie.duration }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <p>No movies available.</p>
+    {% endif %}
+
+    <!-- Screenings Table -->
+    <h3>All Screenings</h3>
+    {% if screenings %}
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Movie Title</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Edit</th>
+        </tr>
+        {% for screening in screenings %}
+        <tr>
+            <td>{{ screening.id }}</td>
+            <td>{{ screening.movie_title }}</td>
+            <td>{{ screening.date }}</td>
+            <td>{{ screening.time }}</td>
+            <td><a href="{{ url_for('main.edit_screening', screening_id=screening.id) }}" class="edit-btn">Edit</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <p>No screenings available.</p>
+    {% endif %}
+</body>
+</html>
