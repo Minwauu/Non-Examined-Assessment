@@ -108,5 +108,35 @@ def admin_dashboard():
         flash('Error.', 'danger')
         return render_template('admin/admindashboard.html', movies=[], screenings=[])
 
+@main_bp.route('/edit_movie', methods = ['POST', 'GET'])
+@login_required
+
+def edit_movie():
+    if request.method == 'POST':
+       try: 
+        movie_id = request.form['movie_id']
+        movie = Movie.query.get(movie_id)
+
+        #details
+        movie.title = request.form['title']
+        movie.description = request.form['description']
+        movie.duration = request.form['duration']
+        movie.genre = request.form['genre']
+        
+        db.session.commit()
+        flash('Movie edited successfully', 'success')
+        return redirect(url_for('main.admin_dashboard'))
+       
+       except:
+           db.session.rollback()
+           flash('Error - try again.')
+           return redirect(url_for('main.edit_movie', movie_id=movie_id))
+       
+    movie_id = request.args.get('movie_id')
+    movie = Movie.query.get(movie_id)
+    return render_template('admin/editmovie.html', movie = movie)
+           
+
+
 
 
