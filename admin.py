@@ -104,7 +104,7 @@ def admin_dashboard():
 
         return render_template('admin/admindashboard.html', movies=movies, screenings=screenings)
     
-    except:
+    except Exception as e:
         flash('Error.', 'danger')
         return render_template('admin/admindashboard.html', movies=[], screenings=[])
 
