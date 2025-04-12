@@ -136,27 +136,32 @@ def edit_movie():
     movie = Movie.query.get(movie_id)
     return render_template('admin/editmovie.html', movie = movie)
 
-@main_bp.route('/delete_movie', methods = ['POST'])
+@main_bp.route('/delete_movie', methods = ['GET', 'POST'])
 @login_required
 
 def delete_movie():
-    try:
-        movie_id = request.form['movie_id']
-        movie = Movie.query.get(movie_id)
+    if request.method == 'POST':
+        try:
+            movie_id = request.form['movie_id']
+            movie = Movie.query.get(movie_id)
 
-        if movie:
-            db.session.delete(movie)
-            db.session.commit()
+            if movie:
+                db.session.delete(movie)
+                db.session.commit()
 
-            flash('Movie deleted successfully', 'success')
-        else:
-            flash('Movie not found - check spelling or try a different title', 'danger')   
+                flash('Movie deleted successfully', 'success')
+            else:
+                flash('Movie not found - check spelling or try a different title', 'danger')   
 
-    except:   
-        db.session.rollback()
-        flash('Error - try again.', 'danger')     
+        except:   
+            db.session.rollback()
+            flash('Error - try again.', 'danger')     
 
-    return(redirect(url_for('main.admin_dashboard')))
+        return redirect(url_for('main.admin_dashboard'))
+    
+    movie_id = request.args.get('movie_id')
+    movie = Movie.query.get(movie_id)
+    return render_template('admin/deletemovie.html', movie=movie)
 
 
 

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delete Movie</title>
+</head>
+<body>
+    <h2>Delete Movie</h2>
+
+    {% if movie %}
+        <p>Are you sure you want to delete the movie: <strong>{{ movie.title }}</strong>?</p>
+        <form method="POST" action="{{ url_for('main.delete_movie') }}">
+            <input type="hidden" name="movie_id" value="{{ movie.id }}">
+            <button type="submit" style="background-color: #dc3545; color: white; padding: 10px; border: none; border-radius: 5px;">
+                Delete
+            </button>
+        </form>
+    {% else %}
+        <p>Movie not found.</p>
+    {% endif %}
+</body>
+</html>

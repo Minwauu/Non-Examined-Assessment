@@ -34,6 +34,12 @@
         .edit-btn:hover {
             background-color: #0056b3;
         }
+        .delete-btn {
+            background-color: #dc3545;
+        }
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
     </style>
 </head>
 <body>
@@ -48,6 +54,8 @@
             <th>Title</th>
             <th>Genre</th>
             <th>Duration (mins)</th>
+            <th>Edit</th>
+            <th>Delete</th>
         </tr>
         {% for movie in movies %}
         <tr>
@@ -55,6 +63,12 @@
             <td>{{ movie.title }}</td>
             <td>{{ movie.genre }}</td>
             <td>{{ movie.duration }}</td>
+            <td>
+                <a href="{{ url_for('main.edit_movie', movie_id=movie.id) }}" class="edit-btn">Edit</a>
+            </td>
+            <td>
+                <a href="{{ url_for('main.delete_movie', movie_id=movie.id) }}" class="edit-btn delete-btn">Delete</a>
+            </td>
         </tr>
         {% endfor %}
     </table>
