@@ -56,12 +56,16 @@ def login():
         if user and bcrypt.check_password_hash(user.password, password): #checks if email and password is correct
             flash('Login complete!', 'success')
             login_user(user)
-            return redirect(url_for('main.dashboard'))
-        else:
-            flash('Incorrect email or password', 'danger')
+            
+            if user.is_admin:
+                return redirect(url_for('main.admin_dashboard'))
+            else:
+                return redirect(url_for('main.dashboard'))
+            
+        flash('Incorrect email or password', 'danger')
     
     return render_template('admin/login.html')
-
+ 
 #dashboard page
 @main_bp.route('/dashboard')
 @login_required # need to be logged in to access dashboard
