@@ -10,6 +10,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(100), unique = True, nullable = False)
     email = db.Column(db.String(100), unique=True, nullable = False)
     password = db.Column(db.String(100), nullable = False)
+    is_admin = db.Column(db.Boolean, default = False)
 
 # movie model
 

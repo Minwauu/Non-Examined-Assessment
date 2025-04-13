@@ -2,8 +2,19 @@ from extensions import db, bcrypt
 from flask import Flask, redirect, url_for, render_template, request, flash, Blueprint
 from flask_login import login_user, logout_user, login_required, current_user
 from models import db, User, Movie, Screening
+from functools import wraps
 
 main_bp = Blueprint('main', __name__)
+
+# function to ensure certain routes can only be accessed by staff/admin
+def admin_required(view_function):
+    @wraps(view_function)
+    def wrapper():
+        if not current_user.is_authenticated or not current_user.is_admin:
+            flash('This page is for staff only. Log in with your admin account.', 'danger')
+            return redirect(url_for('main.login'))
+        return view_function()
+    return wrapper
 
 # registration page
 @main_bp.route('/registering', methods = ['GET', 'POST'])
@@ -68,6 +79,8 @@ def logout():
     return redirect(url_for('main.login'))
 
 @main_bp.route('/add_movie', methods = ['GET', 'POST'])
+@login_required
+@admin_required
 def add_movie():
     #details
     if request.method =='POST':
@@ -95,6 +108,7 @@ def add_movie():
 
 @main_bp.route('/admin_dashboard')
 @login_required
+@admin_required
 
 def admin_dashboard():
     try:
@@ -110,6 +124,7 @@ def admin_dashboard():
 
 @main_bp.route('/edit_movie', methods = ['POST', 'GET'])
 @login_required
+@admin_required
 
 def edit_movie():
     if request.method == 'POST':
@@ -138,6 +153,7 @@ def edit_movie():
 
 @main_bp.route('/delete_movie', methods = ['GET', 'POST'])
 @login_required
+@admin_required
 
 def delete_movie():
     if request.method == 'POST':
@@ -162,7 +178,3 @@ def delete_movie():
     movie_id = request.args.get('movie_id')
     movie = Movie.query.get(movie_id)
     return render_template('admin/deletemovie.html', movie=movie)
-
-
-
-
