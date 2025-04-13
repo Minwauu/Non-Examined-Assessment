@@ -61,8 +61,8 @@ def login():
                 return redirect(url_for('main.admin_dashboard'))
             else:
                 return redirect(url_for('main.dashboard'))
-            
-        flash('Incorrect email or password', 'danger')
+        else:    
+            flash('Incorrect email or password', 'danger')
     
     return render_template('admin/login.html')
  
@@ -132,24 +132,24 @@ def admin_dashboard():
 
 def edit_movie():
     if request.method == 'POST':
-       try: 
-        movie_id = request.form['movie_id']
-        movie = Movie.query.get(movie_id)
+        try: 
+            movie_id = request.form['movie_id']
+            movie = Movie.query.get(movie_id)
 
-        #details
-        movie.title = request.form['title']
-        movie.description = request.form['description']
-        movie.duration = request.form['duration']
-        movie.genre = request.form['genre']
+            #details
+            movie.title = request.form['title']
+            movie.description = request.form['description']
+            movie.duration = request.form['duration']
+            movie.genre = request.form['genre']
         
-        db.session.commit()
-        flash('Movie edited successfully', 'success')
-        return redirect(url_for('main.admin_dashboard'))
+            db.session.commit()
+            flash('Movie edited successfully', 'success')
+            return redirect(url_for('main.admin_dashboard'))
        
-       except:
-           db.session.rollback()
-           flash('Error - try again.')
-           return redirect(url_for('main.edit_movie', movie_id=movie_id))
+        except:
+            db.session.rollback()
+            flash('Error - try again.')
+            return redirect(url_for('main.edit_movie', movie_id=movie_id))
        
     movie_id = request.args.get('movie_id')
     movie = Movie.query.get(movie_id)
