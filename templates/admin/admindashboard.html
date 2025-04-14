@@ -40,10 +40,25 @@
         .delete-btn:hover {
             background-color: #c82333;
         }
+        .add-btn {
+            padding: 8px 15px;
+            background-color: #28a745;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-bottom: 30px;
+            display: inline-block;
+        }
+        .add-btn:hover {
+            background-color: #218838;
+        }
     </style>
 </head>
 <body>
     <h2>Admin Dashboard</h2>
+
+
+    <a href="{{ url_for('main.add_movie') }}" class="add-btn">Add Movie</a>
 
     <!-- Movies Table -->
     <h3>All Movies</h3>
@@ -64,10 +79,10 @@
             <td>{{ movie.genre }}</td>
             <td>{{ movie.duration }}</td>
             <td>
-                <a href="{{ url_for('main.edit_movie', movie_id=movie.id) }}" class="edit-btn">Edit</a>
+                <a href="{{ url_for('main.edit_movie') }}?movie_id={{ movie.id }}" class="edit-btn">Edit</a>
             </td>
             <td>
-                <a href="{{ url_for('main.delete_movie', movie_id=movie.id) }}" class="edit-btn delete-btn">Delete</a>
+                <a href="{{ url_for('main.delete_movie') }}?movie_id={{ movie.id }}" class="edit-btn delete-btn">Delete</a>
             </td>
         </tr>
         {% endfor %}
@@ -102,3 +117,4 @@
     {% endif %}
 </body>
 </html>
+
