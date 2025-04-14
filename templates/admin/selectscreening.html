@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Select Screening - {{ movie.title }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+            background-color: #f9f9f9;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .screening-card {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .select-btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .select-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h2>Select a Screening for <em>{{ movie.title }}</em></h2>
+
+    {% if screenings %}
+        {% for screening in screenings %}
+            <div class="screening-card">
+                <p><strong>Date:</strong> {{ screening.date }}</p>
+                <p><strong>Time:</strong> {{ screening.time }}</p>
+                <a href="{{ url_for('main.select_screening', screening_id=screening.id) }}" class="select-btn">Select</a>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p style="text-align: center;">No screenings available for this movie.</p>
+    {% endif %}
+</body>
+</html>

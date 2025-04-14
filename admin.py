@@ -219,4 +219,16 @@ def edit_screening():
     movies = Movie.query.all() # pick for screening
     return render_template('admin/editscreening.html', screening = screening, movies=movies)
 
+@main_bp.route('/select_screening')
+@login_required
 
+def select_screening():
+    movie_id = request.args.get('movie_id')
+
+    if not movie_id:
+        flash("Please pick a movie.", 'danger')
+        return redirect(url_for('main.dashboard'))
+    
+    movie = Movie.query.get(movie_id)
+    screenings = Screening.query.filter_by(movie_id = movie_id).all()
+    return render_template('admin/selectscreening.html', movie=movie, screenings=screenings)
