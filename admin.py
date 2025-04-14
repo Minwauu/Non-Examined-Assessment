@@ -1,7 +1,7 @@
 from extensions import db, bcrypt
 from flask import Flask, redirect, url_for, render_template, request, flash, Blueprint
 from flask_login import login_user, logout_user, login_required, current_user
-from models import db, User, Movie, Screening
+from models import db, User, Movie, Screening, SeatBooking
 from functools import wraps
 
 main_bp = Blueprint('main', __name__)
@@ -232,3 +232,20 @@ def select_screening():
     movie = Movie.query.get(movie_id)
     screenings = Screening.query.filter_by(movie_id = movie_id).all()
     return render_template('admin/selectscreening.html', movie=movie, screenings=screenings)
+
+@main_bp.route('/select_seats')
+@login_required
+
+def select_seats():
+    screening_id = request.args.get('screening_id')
+    if not screening_id:
+        flash("Please select a screening.", 'danger') # if no screening select
+        return redirect(url_for('main.dashboard'))
+    screening = Screening.query.get(screening_id)
+    
+    if not screening:
+        flash('Unable to locate screening', 'danger')
+        return redirect(url_for('main.dashboard'))
+    
+    booked_seats = SeatBooking.query.filter_by(screening_id=screening.id).with_entities(SeatBooking.seat_number).all()
+    
