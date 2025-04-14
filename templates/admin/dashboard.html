@@ -55,6 +55,12 @@
             padding: 20px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
+        .movie-card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
         .movie-title {
             font-size: 1.2em;
             font-weight: bold;
@@ -98,6 +104,9 @@
     <div class="movie-container">
         {% for movie in movies %}
         <div class="movie-card">
+            {% if movie.url %}
+                <img src="{{ movie.url }}" alt="{{ movie.title }} poster">
+            {% endif %}
             <div class="movie-title">{{ movie.title }}</div>
             <div class="movie-genre">{{ movie.genre }}</div>
             <div class="movie-duration">{{ movie.duration }} mins</div>

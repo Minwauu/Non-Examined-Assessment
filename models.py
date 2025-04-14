@@ -21,6 +21,7 @@ class Movie(db.Model):
     description = db.Column(db.Text, nullable=False)
     genre = db.Column(db.String(100), nullable = False)
     screenings = db.relationship('Screening', backref = 'movie', lazy = True)
+    url = db.Column(db.String(250)) # movie posters
 
 # screenings 
 

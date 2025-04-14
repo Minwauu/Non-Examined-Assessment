@@ -98,9 +98,10 @@ def add_movie():
         description = request.form['description']
         duration = request.form['duration']
         genre = request.form['genre']
+        url = request.form['url']
 
         #make new movie using movie model
-        new_movie = Movie(title=title, duration = duration, description = description, genre=genre)
+        new_movie = Movie(title=title, duration = duration, description = description, genre=genre, url=url)
 
         try:
             # add movie to db
