@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Screening</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+            text-align: center;
+        }
+        form {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        label, input, select {
+            display: block;
+            margin: 15px auto;
+            width: 100%;
+        }
+        input, select {
+            padding: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Edit Screening</h2>
+
+
+    <form method="POST">
+
+
+        <label for="movie_id">Movie</label>
+        <select name="movie_id" id="movie_id" required>
+            {% for movie in movies %}
+                <option value="{{ movie.id }}" {% if movie.id == screening.movie_id %}selected{% endif %}>
+                    {{ movie.title }}
+                </option>
+            {% endfor %}
+        </select>
+
+
+        <label for="screen_number">Screen Number</label>
+        <input type="number" name="screen_number" id="screen_number" required value="{{ screening.screen_number }}">
+
+
+        <button type="submit">Update Screening</button>
+    </form>
+
+</body>
+</html>

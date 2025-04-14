@@ -182,3 +182,34 @@ def delete_movie():
     movie_id = request.args.get('movie_id')
     movie = Movie.query.get(movie_id)
     return render_template('admin/deletemovie.html', movie=movie)
+
+@main_bp.route('/edit_screening', methods= ['GET', 'POST'])
+@login_required
+@admin_required
+
+def edit_screening():
+    
+    screening_id = request.args.get('screening_id')
+    screening= Screening.query.get(screening_id)
+# if there isnt a screening go back to dashboard
+    if not screening:
+        flash("Screening was not found.", "danger")
+        return redirect(url_for('main.admin_dashboard'))
+    
+    if request.method == "POST":
+        try:
+            screening_movie_id = request.form['movie_id']
+            screening.screen_number= request.form['screen_number']
+
+            db.session.commit()
+            flash('Screening edited successfully.', 'success')
+            return redirect(url_for('main.admin_dashboard'))
+        except:
+            db.session.rollback #if fails undo
+            flash('Error - try again.', 'danger')
+            return redirect(url_for('main.edit_screening', screening_id = screening.id))
+        
+    movies = Movie.query.all() # pick for screening
+    return render_template('admin/editscreening.html', screening = screening, movies=movies)
+
+
