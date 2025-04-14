@@ -72,6 +72,12 @@
         }
         .movie-duration {
             color: #555;
+            margin-bottom: 10px;
+        }
+        .movie-description {
+            color: #444;
+            font-size: 0.95em;
+            text-align: left;
         }
     </style>
 </head>
@@ -110,6 +116,9 @@
             <div class="movie-title">{{ movie.title }}</div>
             <div class="movie-genre">{{ movie.genre }}</div>
             <div class="movie-duration">{{ movie.duration }} mins</div>
+            {% if movie.description %}
+                <p class="movie-description">{{ movie.description }}</p>
+            {% endif %}
         </div>
         {% endfor %}
     </div>
@@ -119,4 +128,3 @@
 
 </body>
 </html>
-
