@@ -1,29 +1,67 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Admin Dashboard</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 50px;
+            margin: 0;
+            padding: 0;
             text-align: center;
+            background-color: #f4f4f4;
         }
+
+        .navbar {
+            background-color: #333;
+            padding: 15px;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+        }
+
+        .navbar a:hover {
+            background-color: #555;
+        }
+
         h2 {
             color: #333;
-            margin-bottom: 30px;
+            margin: 40px 0 10px;
         }
+
+        h3 {
+            margin-top: 50px;
+            color: #333;
+        }
+
+        .container {
+            margin: 30px auto;
+            padding: 0 40px;
+            max-width: 1200px;
+        }
+
         table {
-            width: 90%;
-            margin: 0 auto 40px;
+            width: 100%;
+            margin: 20px auto;
             border-collapse: collapse;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
+
         th, td {
-            padding: 10px;
-            border: 1px solid #ddd;
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
         }
+
         th {
             background-color: #f2f2f2;
         }
+
         .edit-btn {
             padding: 5px 10px;
             background-color: #007bff;
@@ -31,15 +69,19 @@
             text-decoration: none;
             border-radius: 5px;
         }
+
         .edit-btn:hover {
             background-color: #0056b3;
         }
+
         .delete-btn {
             background-color: #dc3545;
         }
+
         .delete-btn:hover {
             background-color: #c82333;
         }
+
         .add-btn {
             padding: 8px 15px;
             background-color: #28a745;
@@ -49,72 +91,85 @@
             margin-bottom: 30px;
             display: inline-block;
         }
+
         .add-btn:hover {
             background-color: #218838;
         }
     </style>
 </head>
 <body>
-    <h2>Admin Dashboard</h2>
 
 
-    <a href="{{ url_for('main.add_movie') }}" class="add-btn">Add Movie</a>
+    <div class="navbar">
+        <a href="{{ url_for('main.admin_dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('main.logout') }}">Logout</a>
+    </div>
 
-    <!-- Movies Table -->
-    <h3>All Movies</h3>
-    {% if movies %}
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Genre</th>
-            <th>Duration (mins)</th>
-            <th>Edit</th>
-            <th>Delete</th>
-        </tr>
-        {% for movie in movies %}
-        <tr>
-            <td>{{ movie.id }}</td>
-            <td>{{ movie.title }}</td>
-            <td>{{ movie.genre }}</td>
-            <td>{{ movie.duration }}</td>
-            <td>
-                <a href="{{ url_for('main.edit_movie') }}?movie_id={{ movie.id }}" class="edit-btn">Edit</a>
-            </td>
-            <td>
-                <a href="{{ url_for('main.delete_movie') }}?movie_id={{ movie.id }}" class="edit-btn delete-btn">Delete</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
-    {% else %}
-        <p>No movies available.</p>
-    {% endif %}
 
-    <!-- Screenings Table -->
-    <h3>All Screenings</h3>
-    {% if screenings %}
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Movie Title</th>
-            <th>Date</th>
-            <th>Time</th>
-            <th>Edit</th>
-        </tr>
-        {% for screening in screenings %}
-        <tr>
-            <td>{{ screening.id }}</td>
-            <td>{{ screening.movie_title }}</td>
-            <td>{{ screening.date }}</td>
-            <td>{{ screening.time }}</td>
-            <td><a href="{{ url_for('main.edit_screening', screening_id=screening.id) }}" class="edit-btn">Edit</a></td>
-        </tr>
-        {% endfor %}
-    </table>
-    {% else %}
-        <p>No screenings available.</p>
-    {% endif %}
+    <div class="container">
+        <h1>Welcome, {{ username }}!</h1>
+
+
+        <a href="{{ url_for('main.add_movie') }}" class="add-btn">Add Movie</a>
+
+        <!-- Movies Table -->
+        <h3>All Movies</h3>
+        {% if movies %}
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Genre</th>
+                <th>Duration (mins)</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+            {% for movie in movies %}
+            <tr>
+                <td>{{ movie.id }}</td>
+                <td>{{ movie.title }}</td>
+                <td>{{ movie.genre }}</td>
+                <td>{{ movie.duration }}</td>
+                <td>
+                    <a href="{{ url_for('main.edit_movie') }}?movie_id={{ movie.id }}" class="edit-btn">Edit</a>
+                </td>
+                <td>
+                    <a href="{{ url_for('main.delete_movie') }}?movie_id={{ movie.id }}" class="edit-btn delete-btn">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+            <p>No movies available.</p>
+        {% endif %}
+
+
+        <h3>All Screenings</h3>
+        {% if screenings %}
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Movie Title</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Edit</th>
+            </tr>
+            {% for screening in screenings %}
+            <tr>
+                <td>{{ screening.id }}</td>
+                <td>{{ screening.movie_title }}</td>
+                <td>{{ screening.date }}</td>
+                <td>{{ screening.time }}</td>
+                <td><a href="{{ url_for('main.edit_screening', screening_id=screening.id) }}" class="edit-btn">Edit</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+            <p>No screenings available.</p>
+        {% endif %}
+    </div>
+
 </body>
 </html>
+
 
