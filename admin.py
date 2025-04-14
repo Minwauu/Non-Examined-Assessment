@@ -1,5 +1,5 @@
 from extensions import db, bcrypt
-from flask import Flask, redirect, url_for, render_template, request, flash, Blueprint, session
+from flask import Flask, redirect, url_for, render_template, request, flash, Blueprint
 from flask_login import login_user, logout_user, login_required, current_user
 from models import db, User, Movie, Screening
 from functools import wraps
@@ -49,7 +49,6 @@ def registering():
 @main_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        session.pop('_flashes', None)
         email = request.form.get('email')
         password = request.form.get('password')
         user = User.query.filter_by(email=email).first()
