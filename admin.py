@@ -71,7 +71,13 @@ def login():
 @login_required # need to be logged in to access dashboard
 
 def dashboard():
-    return render_template('admin/dashboard.html', username=current_user.username)
+    #display movies from db
+    try:
+        movies = Movie.query.all() 
+        return render_template('admin/dashboard.html', username = current_user.username, movies = movies)
+    except:
+        flash('Error loading movies.', 'danger')
+    return render_template('admin/dashboard.html', username=current_user.username, movies = [])
   
 
 @main_bp.route('/logout')

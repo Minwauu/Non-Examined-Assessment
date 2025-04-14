@@ -39,6 +39,34 @@
         .btn:hover {
             background-color: #0056b3;
         }
+
+        .movie-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 50px auto;
+            padding: 0 40px;
+            max-width: 1200px;
+        }
+        .movie-card {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .movie-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .movie-genre {
+            color: #777;
+            margin-bottom: 10px;
+        }
+        .movie-duration {
+            color: #555;
+        }
     </style>
 </head>
 <body>
@@ -65,5 +93,21 @@
         <a href="{{ url_for('main.logout') }}" class="btn">Logout</a>
     </div>
 
+    {% if movies %}
+    <h2>Now Showing</h2>
+    <div class="movie-container">
+        {% for movie in movies %}
+        <div class="movie-card">
+            <div class="movie-title">{{ movie.title }}</div>
+            <div class="movie-genre">{{ movie.genre }}</div>
+            <div class="movie-duration">{{ movie.duration }} mins</div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <p>No movies available at the moment.</p>
+    {% endif %}
+
 </body>
-</html> 
+</html>
+
