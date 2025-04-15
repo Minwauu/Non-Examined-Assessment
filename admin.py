@@ -1,7 +1,7 @@
 from extensions import db, bcrypt
-from flask import Flask, redirect, url_for, render_template, request, flash, Blueprint
+from flask import Flask, redirect, url_for, render_template, request, flash, Blueprint, session
 from flask_login import login_user, logout_user, login_required, current_user
-from models import db, User, Movie, Screening, SeatBooking
+from models import db, User, Movie, Screening, SeatBooking, Showtime
 from functools import wraps
 
 main_bp = Blueprint('main', __name__)
@@ -250,5 +250,36 @@ def select_seats():
     booked_seats = SeatBooking.query.filter_by(screening_id=screening.id).with_entities(SeatBooking.seat_number).all()
     booked_seats = [seat[0] for seat in booked_seats]
 
-    return render_template('selectseats.html', screening = screening, booked_seats = booked_seats)
+    return render_template('admin/selectseats.html', screening = screening, booked_seats = booked_seats)
+
+@main_bp.route('/book_seat', methods = ['POST', 'GET'])
+@login_required
+
+def book_seat():
+    try:
+        showtime_id = request.args.get('showtime_id')
+
+        if not showtime_id:
+            flash('No showtime given.', 'danger')
+            return redirect(url_for('main.dashboard'))
+        
+        showtime = Showtime.query.get(showtime_id)
+
+        if not showtime:
+            flash('Unable to locate showtime', 'danger')
+            return redirect(url_for('main.dashboard'))
+        
+        screening = showtime.screening
+        movie = screening.movie
+
+        return render_template('admin/bookseat.html', showtime = showtime, screening = screening, movie= movie)
+    
+    except:
+        flash('Error - try again.', 'danger')  
+        return redirect(url_for('main.dashboard'))
+    
+
+
+
+
 

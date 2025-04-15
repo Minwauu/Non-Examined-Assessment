@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book Seat - {{ screening.movie.title }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .info {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+        }
+
+        select, input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        input[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Book a Seat</h2>
+
+    <div class="info">
+        <p><strong>Movie:</strong> {{ screening.movie.title }}</p>
+        <p><strong>Date:</strong> {{ showtime.start_time.strftime('%Y-%m-%d') }}</p>
+        <p><strong>Time:</strong> {{ showtime.start_time.strftime('%H:%M') }}</p>
+        <p><strong>Screen:</strong> {{ screening.screen_number }}</p>
+    </div>
+
+    <form method="POST">
+        <label for="seat">Select Seat:</label>
+        <select name="seat" id="seat" required>
+            {% for seat in available_seats %}
+                <option value="{{ seat }}">{{ seat }}</option>
+            {% endfor %}
+        </select>
+
+        <input type="submit" value="Confirm Booking">
+    </form>
+</div>
+
+</body>
+</html>

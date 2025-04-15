@@ -42,19 +42,21 @@
 <body>
     <h2>Select a Screening for <em>{{ movie.title }}</em></h2>
 
-    {% if screenings %}
-        {% for screening in screenings %}
-            {% for showtime in screening.showtimes %}
-                <div class="screening-card">
-                    <p><strong>Date:</strong> {{ showtime.start_time.strftime('%A %d %B %Y') }}</p>
-                    <p><strong>Time:</strong> {{ showtime.start_time.strftime('%I:%M %p') }}</p>
-                    <a href="{{ url_for('main.select_screening', screening_id=screening.id, showtime_id=showtime.id) }}" class="select-btn">Select</a>
-                </div>
-            {% endfor %}
+{% if screenings %}
+    {% for screening in screenings %}
+        {% for showtime in screening.showtimes %}
+            <div class="screening-card">
+                <p><strong>Screen:</strong> {{ screening.screen_number }}</p>
+                <p><strong>Date:</strong> {{ showtime.start_time.strftime('%Y-%m-%d') }}</p>
+                <p><strong>Time:</strong> {{ showtime.start_time.strftime('%H:%M') }}</p>
+                <a href="{{ url_for('main.book_seat', showtime_id=showtime.id) }}" class="select-btn">Select</a>
+            </div>
         {% endfor %}
-    {% else %}
-        <p style="text-align: center;">No screenings available for this movie.</p>
-    {% endif %}
+    {% endfor %}
+{% else %}
+    <p style="text-align: center;">No screenings available for this movie.</p>
+{% endif %}
+
 </body>
 </html>
 
