@@ -248,4 +248,7 @@ def select_seats():
         return redirect(url_for('main.dashboard'))
     
     booked_seats = SeatBooking.query.filter_by(screening_id=screening.id).with_entities(SeatBooking.seat_number).all()
-    
+    booked_seats = [seat[0] for seat in booked_seats]
+
+    return render_template('selectseats.html', screening = screening, booked_seats = booked_seats)
+

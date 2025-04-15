@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Select Seats</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 40px;
+            background-color: #f4f4f4;
+        }
+        h2 {
+            margin-bottom: 10px;
+        }
+        .screen {
+            background-color: #ccc;
+            padding: 10px;
+            margin-bottom: 20px;
+            width: 60%;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 5px;
+        }
+        .seats {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        .seat {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .seat.selected {
+            background-color: #007bff;
+        }
+        .seat.booked {
+            background-color: #888;
+            cursor: not-allowed;
+        }
+        .submit-btn {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+        }
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <script>
+        function selectSeat(button) {
+            const alreadyBooked = button.classList.contains('booked');
+            if (alreadyBooked) return;
+
+            const selected = document.querySelector('.seat.selected');
+            if (selected) selected.classList.remove('selected');
+
+            button.classList.add('selected');
+            document.getElementById('seat_number').value = button.dataset.seat;
+        }
+    </script>
+</head>
+<body>
+    <h2>Select a Seat for {{ screening.movie.title }}</h2>
+    <p>{{ screening.date }} at {{ screening.time }}</p>
+
+    <div class="screen">Screen</div>
+
+    <form method="POST" action="{{ url_for('main.book_seat') }}">
+        <input type="hidden" name="screening_id" value="{{ screening.id }}">
+        <input type="hidden" name="seat_number" id="seat_number">
+
+        <div class="seats">
+            {% for row in ['A', 'B', 'C', 'D'] %}
+                {% for col in range(1, 9) %}
+                    {% set seat = row ~ col %}
+                    <button type="button"
+                            class="seat {% if seat in booked_seats %}booked{% endif %}"
+                            data-seat="{{ seat }}"
+                            onclick="selectSeat(this)">
+                        {{ seat }}
+                    </button>
+                {% endfor %}
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="submit-btn">Confirm Seat</button>
+    </form>
+</body>
+</html>

@@ -44,14 +44,17 @@
 
     {% if screenings %}
         {% for screening in screenings %}
-            <div class="screening-card">
-                <p><strong>Date:</strong> {{ screening.date }}</p>
-                <p><strong>Time:</strong> {{ screening.time }}</p>
-                <a href="{{ url_for('main.select_screening', screening_id=screening.id) }}" class="select-btn">Select</a>
-            </div>
+            {% for showtime in screening.showtimes %}
+                <div class="screening-card">
+                    <p><strong>Date:</strong> {{ showtime.start_time.strftime('%A %d %B %Y') }}</p>
+                    <p><strong>Time:</strong> {{ showtime.start_time.strftime('%I:%M %p') }}</p>
+                    <a href="{{ url_for('main.select_screening', screening_id=screening.id, showtime_id=showtime.id) }}" class="select-btn">Select</a>
+                </div>
+            {% endfor %}
         {% endfor %}
     {% else %}
         <p style="text-align: center;">No screenings available for this movie.</p>
     {% endif %}
 </body>
 </html>
+
