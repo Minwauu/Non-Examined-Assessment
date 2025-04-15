@@ -10,7 +10,7 @@
         }
 
         .container {
-            max-width: 600px;
+            max-width: 700px;
             margin: auto;
             background-color: white;
             padding: 30px;
@@ -27,28 +27,50 @@
             margin-bottom: 20px;
         }
 
-        label {
-            display: block;
-            margin-top: 15px;
-        }
-
-        select, input[type="submit"] {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-
-        input[type="submit"] {
-            background-color: #007bff;
-            color: white;
-            border: none;
+        .seat-grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr); /* Fallback: 10 seats per row */
+            gap: 10px;
             margin-top: 20px;
+        }
+
+        .seat {
+            background-color: #28a745;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
             cursor: pointer;
         }
 
-        input[type="submit"]:hover {
+        .seat input {
+            display: none;
+        }
+
+        .seat-booked {
+            background-color: #ccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .seat:hover:not(.seat-booked) {
+            background-color: #218838;
+        }
+
+        .submit-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            margin-top: 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .submit-btn:hover {
             background-color: #0056b3;
         }
     </style>
@@ -60,22 +82,27 @@
 
     <div class="info">
         <p><strong>Movie:</strong> {{ screening.movie.title }}</p>
-        <p><strong>Date:</strong> {{ showtime.start_time.strftime('%Y-%m-%d') }}</p>
-        <p><strong>Time:</strong> {{ showtime.start_time.strftime('%H:%M') }}</p>
-        <p><strong>Screen:</strong> {{ screening.screen_number }}</p>
+    <p><strong>Date:</strong> {{ showtime.start_time.strftime('%Y-%m-%d') }}</p>
+    <p><strong>Time:</strong> {{ showtime.start_time.strftime('%H:%M') }}</p>
+    <p><strong>Screen:</strong> {{ screening.screen_number }}</p>
+
     </div>
 
     <form method="POST">
-        <label for="seat">Select Seat:</label>
-        <select name="seat" id="seat" required>
-            {% for seat in available_seats %}
-                <option value="{{ seat }}">{{ seat }}</option>
+        <div class="seat-grid">
+            {% for seat in all_seats %}
+                {% set booked = seat in Booked_Seats %}
+                <label class="seat {% if booked %}seat-booked{% endif %}">
+                    <input type="radio" name="seat" value="{{ seat }}" {% if booked %}disabled{% endif %}>
+                    {{ seat }}
+                </label>
             {% endfor %}
-        </select>
+        </div>
 
-        <input type="submit" value="Confirm Booking">
+        <input type="submit" value="Confirm Booking" class="submit-btn">
     </form>
 </div>
 
 </body>
 </html>
+

@@ -59,6 +59,7 @@ class SeatBooking(db.Model):
     is_accessible = db.Column(db.Boolean, default = False, nullable=False)
     screening = db.relationship("Screening", backref = "seatbookings")
     user = db.relationship("User", backref = "seatbookings") 
+    showtime_id = db.Column(db.Integer, db.ForeignKey('showtime.id'), nullable = False)
 
     def status(self):
         if self.is_accessible:

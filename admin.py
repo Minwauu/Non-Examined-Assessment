@@ -3,6 +3,7 @@ from flask import Flask, redirect, url_for, render_template, request, flash, Blu
 from flask_login import login_user, logout_user, login_required, current_user
 from models import db, User, Movie, Screening, SeatBooking, Showtime
 from functools import wraps
+from seating import Seating
 
 main_bp = Blueprint('main', __name__)
 
@@ -269,13 +270,36 @@ def book_seat():
             flash('Unable to locate showtime', 'danger')
             return redirect(url_for('main.dashboard'))
         
+    
         screening = showtime.screening
         movie = screening.movie
 
-        return render_template('admin/bookseat.html', showtime = showtime, screening = screening, movie= movie)
+        seating = Seating(showtime_id)
+        all_seats = seating.seat_numbers() #gets all seats
+        Booked_Seats = seating.booked_seats(db.session, SeatBooking) #gets booked seats
+        Available_Seats = seating.available_seats(db.session, SeatBooking) #gets available seats
+
+        if request.method =="POST":# if user selects seat
+            selected_seat = request.form.get('seat')
+
+            if selected_seat:
+                # checking if the seat the user picked is booked
+                if selected_seat not in Booked_Seats:
+                    booking = SeatBooking(showtime_id = showtime_id, seat_number =selected_seat, user_id=current_user.id  )
+                    db.session.add(booking)
+                    db.session.commit()
+                    flash('Seat ' + str(selected_seat) + ' has been booked.', 'success')
+                    return redirect(url_for('main.dashboard'))
+                else:
+                    flash('Seat ' + str(selected_seat) + ' is already booked. Please choose a different seat.', 'danger')
+            
+
+
+        return render_template('admin/bookseat.html',screening = screening, movie= movie, showtime=showtime, all_seats = all_seats, Booked_Seats = Booked_Seats, Available_Seats = Available_Seats)
     
-    except:
-        flash('Error - try again.', 'danger')  
+    except Exception as e:
+        flash(f'Error: {str(e)} - try again.', 'danger')
+        #flash('Error - try again.', 'danger')  
         return redirect(url_for('main.dashboard'))
     
 
