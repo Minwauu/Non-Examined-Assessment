@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Bookings</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .booking-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .booking-item {
+            border-bottom: 1px solid #ddd;
+            padding: 15px 0;
+        }
+
+        .booking-item p {
+            margin: 5px 0;
+        }
+
+        .booking-item .seat {
+            font-weight: bold;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>My Bookings</h2>
+
+    <ul class="booking-list">
+        {% for booking in bookings %}
+        <li class="booking-item">
+            <p><strong>Movie:</strong> {{ booking.movie_title }}</p>
+            <p><strong>Screen Time:</strong> {{ booking.screening_time.strftime('%Y-%m-%d %H:%M') }}</p>
+            <p><strong>Screen:</strong> {{ booking.screen_number }}</p>
+            <p><strong>Seat:</strong> <span class="seat">{{ booking.seat_number }}</span></p>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+
+</body>
+</html>

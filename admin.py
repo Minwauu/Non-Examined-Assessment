@@ -313,6 +313,29 @@ def book_seat():
         return redirect(url_for('main.dashboard'))
     
 
+@main_bp.route('/my_bookings')
+@login_required
+
+def my_bookings():
+    try: # get all bookings for user currently logged in
+        bookings = SeatBooking.query.filter_by(user_id=current_user.id).all()
+
+        #details of the movies
+        bookings_details = []
+        for booking in bookings:
+            showtime = Showtime.query.get(booking.showtime_id)
+            screening = showtime.screening
+            movie = screening.movie
+            bookings_details.append({'seat_number': booking.seat_number, 'movie_title': movie.title, 'screening_time': showtime.start_time, 'screen_number': screening.screen_number})
+        return render_template('admin/mybookings.html', bookings = bookings_details)
+    
+    except Exception as e:
+        #flash('Error showing bookings.', 'danger')
+        flash(f'Error: {str(e)} - try again.', 'danger')
+        return redirect(url_for('main.dashboard'))
+
+    
+
 
 
 
