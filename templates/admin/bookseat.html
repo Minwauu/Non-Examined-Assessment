@@ -29,32 +29,45 @@
 
         .seat-grid {
             display: grid;
-            grid-template-columns: repeat(10, 1fr); /* Fallback: 10 seats per row */
+            grid-template-columns: repeat(10, 1fr); /* 10 seats per row */
             gap: 10px;
             margin-top: 20px;
         }
 
         .seat {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .seat input[type="checkbox"] {
+            display: none;
+        }
+
+        .seat span {
             background-color: #28a745;
             color: white;
             padding: 10px;
             border-radius: 5px;
             font-weight: bold;
             text-align: center;
+            width: 100%;
+            transition: background-color 0.2s ease;
             cursor: pointer;
         }
 
-        .seat input {
-            display: none;
-        }
-
-        .seat-booked {
-            background-color: #ccc;
+        .seat-booked span {
+            background-color: #ccc !important;
             cursor: not-allowed;
             opacity: 0.6;
         }
 
-        .seat:hover:not(.seat-booked) {
+        .seat input[type="checkbox"]:checked + span {
+            background-color: #0056b3;
+        }
+
+        .seat span:hover {
             background-color: #218838;
         }
 
@@ -78,14 +91,13 @@
 <body>
 
 <div class="container">
-    <h2>Book a Seat</h2>
+    <h2>Book Seats</h2>
 
     <div class="info">
         <p><strong>Movie:</strong> {{ screening.movie.title }}</p>
-    <p><strong>Date:</strong> {{ showtime.start_time.strftime('%Y-%m-%d') }}</p>
-    <p><strong>Time:</strong> {{ showtime.start_time.strftime('%H:%M') }}</p>
-    <p><strong>Screen:</strong> {{ screening.screen_number }}</p>
-
+        <p><strong>Date:</strong> {{ showtime.start_time.strftime('%Y-%m-%d') }}</p>
+        <p><strong>Time:</strong> {{ showtime.start_time.strftime('%H:%M') }}</p>
+        <p><strong>Screen:</strong> {{ screening.screen_number }}</p>
     </div>
 
     <form method="POST">
@@ -93,8 +105,8 @@
             {% for seat in all_seats %}
                 {% set booked = seat in Booked_Seats %}
                 <label class="seat {% if booked %}seat-booked{% endif %}">
-                    <input type="radio" name="seat" value="{{ seat }}" {% if booked %}disabled{% endif %}>
-                    {{ seat }}
+                    <input type="checkbox" name="seats" value="{{ seat }}" {% if booked %}disabled{% endif %}>
+                    <span>{{ seat }}</span>
                 </label>
             {% endfor %}
         </div>

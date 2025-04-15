@@ -1,7 +1,7 @@
 from extensions import db, bcrypt
 from flask import Flask, redirect, url_for, render_template, request, flash, Blueprint, session
 from flask_login import login_user, logout_user, login_required, current_user
-from models import db, User, Movie, Screening, SeatBooking, Showtime
+from models import db, User, Movie, Screening, SeatBooking, Showtime, SeatStatus
 from functools import wraps
 from seating import Seating
 
@@ -280,26 +280,36 @@ def book_seat():
         Available_Seats = seating.available_seats(db.session, SeatBooking) #gets available seats
 
         if request.method =="POST":# if user selects seat
-            selected_seat = request.form.get('seat')
+            selected_seats = request.form.getlist('seats')
 
-            if selected_seat:
-                # checking if the seat the user picked is booked
-                if selected_seat not in Booked_Seats:
-                    booking = SeatBooking(showtime_id = showtime_id, seat_number =selected_seat, user_id=current_user.id  )
-                    db.session.add(booking)
-                    db.session.commit()
-                    flash('Seat ' + str(selected_seat) + ' has been booked.', 'success')
-                    return redirect(url_for('main.dashboard'))
+            if selected_seats:
+                unsuccessful_seats = []
+
+                # checking if the seats the user picked are booked
+                for seat in selected_seats:
+                    if seat not in Booked_Seats:
+                        booking = SeatBooking(showtime_id = showtime.id, seat_number =seat, user_id=current_user.id , screening_id = screening.id, availability=SeatStatus.AVAILABLE )
+                        db.session.add(booking)
+                    else:
+                        unsuccessful_seats.append(seat) # seats that were unable to be booked
+                    
+                db.session.commit()
+                if unsuccessful_seats:
+                        
+                    flash(f'Some seats were already taken: {", ".join(unsuccessful_seats)}.', 'warning')
+                   
                 else:
-                    flash('Seat ' + str(selected_seat) + ' is already booked. Please choose a different seat.', 'danger')
-            
+                    flash(f'Successfully booked {", ".join(selected_seats)}.', 'success')
 
+                return redirect(url_for('main.dashboard'))
+
+            else:
+                flash('Please choose at least one seat.', 'danger')
 
         return render_template('admin/bookseat.html',screening = screening, movie= movie, showtime=showtime, all_seats = all_seats, Booked_Seats = Booked_Seats, Available_Seats = Available_Seats)
     
     except Exception as e:
         flash(f'Error: {str(e)} - try again.', 'danger')
-        #flash('Error - try again.', 'danger')  
         return redirect(url_for('main.dashboard'))
     
 
