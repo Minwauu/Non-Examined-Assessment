@@ -86,6 +86,16 @@
         .submit-btn:hover {
             background-color: #0056b3;
         }
+
+        .seat-accessible span {
+            background-color: #f0ad4e;
+        }
+
+        .seat-accessible input[type="checkbox"]:disabled + span {
+            background-color: #e57373; /* red-ish when locked */
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
     </style>
 </head>
 <body>
@@ -100,13 +110,29 @@
         <p><strong>Screen:</strong> {{ screening.screen_number }}</p>
     </div>
 
+    {% set needs_accessible = request.form.get('needs_accessible') %}
+
     <form method="POST">
+        <label style="display:block; margin-bottom:15px;">
+            <input type="checkbox" id="accessibleToggle" name="needs_accessible" {% if needs_accessible %}checked{% endif %}>
+            I or someone in my party requires an accessible seat.
+        </label>
+
         <div class="seat-grid">
             {% for seat in all_seats %}
                 {% set booked = seat in Booked_Seats %}
-                <label class="seat {% if booked %}seat-booked{% endif %}">
-                    <input type="checkbox" name="seats" value="{{ seat }}" {% if booked %}disabled{% endif %}>
-                    <span>{{ seat }}</span>
+                {% set accessible = seat in Accessible_Seats %}
+
+                <label class="seat 
+                    {% if booked %}seat-booked{% endif %} 
+                    {% if accessible %}seat-accessible{% endif %}">
+                    <input type="checkbox" 
+                           name="seats" 
+                           value="{{ seat }}"
+                           {% if booked or (accessible and not needs_accessible) %}disabled{% endif %}>
+                    <span>
+                        {{ seat }}{% if accessible %} ♿{% endif %}
+                    </span>
                 </label>
             {% endfor %}
         </div>
@@ -115,6 +141,23 @@
     </form>
 </div>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const toggle = document.getElementById('accessibleToggle');
+        const accessibleCheckboxes = document.querySelectorAll('.seat-accessible input[type="checkbox"]');
+
+        function updateAccessibleState() {
+            accessibleCheckboxes.forEach(cb => {
+                cb.disabled = !toggle.checked;
+            });
+        }
+
+        toggle.addEventListener('change', updateAccessibleState);
+
+        // Ensure accessible checkboxes update on page load
+        updateAccessibleState();
+    });
+</script>
+
 </body>
 </html>
-

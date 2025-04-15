@@ -278,7 +278,11 @@ def book_seat():
         all_seats = seating.seat_numbers() #gets all seats
         Booked_Seats = seating.booked_seats(db.session, SeatBooking) #gets booked seats
         Available_Seats = seating.available_seats(db.session, SeatBooking) #gets available seats
+        Accessible_Seats = seating.accessibility_seats()
 
+        needs_accessible = request.form.get('needs_accessible') if request.method == 'POST' else False
+
+        
         if request.method =="POST":# if user selects seat
             selected_seats = request.form.getlist('seats')
 
@@ -306,7 +310,8 @@ def book_seat():
             else:
                 flash('Please choose at least one seat.', 'danger')
 
-        return render_template('admin/bookseat.html',screening = screening, movie= movie, showtime=showtime, all_seats = all_seats, Booked_Seats = Booked_Seats, Available_Seats = Available_Seats)
+        
+        return render_template('admin/bookseat.html',screening = screening, movie= movie, showtime=showtime, all_seats = all_seats, Booked_Seats = Booked_Seats, Available_Seats = Available_Seats, Accessible_Seats = Accessible_Seats)
     
     except Exception as e:
         flash(f'Error: {str(e)} - try again.', 'danger')

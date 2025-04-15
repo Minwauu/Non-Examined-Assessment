@@ -40,5 +40,8 @@ class Seating:
         else:
             return False
         
+    def accessibility_seats(self):
+        return ['A1', 'A2', 'A9', 'A10']
+        
 
 
