@@ -162,6 +162,7 @@
             <p>No movies available.</p>
         {% endif %}
 
+        <!-- Screenings Table -->
         <h3>All Screenings</h3>
         {% if screenings %}
         <table>
@@ -175,9 +176,21 @@
             {% for screening in screenings %}
             <tr>
                 <td>{{ screening.id }}</td>
-                <td>{{ screening.movie_title }}</td>
-                <td>{{ screening.date }}</td>
-                <td>{{ screening.time }}</td>
+                <td>{{ screening.movie.title }}</td>
+                <td>
+                    {% if screening.showtimes %}
+                        {{ screening.showtimes[0].start_time.strftime('%Y-%m-%d') }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+                <td>
+                    {% if screening.showtimes %}
+                        {{ screening.showtimes[0].start_time.strftime('%H:%M') }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
                 <td><a href="{{ url_for('main.edit_screening', screening_id=screening.id) }}" class="edit-btn">Edit</a></td>
             </tr>
             {% endfor %}
@@ -189,7 +202,5 @@
 
 </body>
 </html>
-
-
 
 
